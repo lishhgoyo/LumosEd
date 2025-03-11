@@ -1,0 +1,10 @@
+{% extends 'learning/base.html' %}
+{% block title %}Personalized Learning{% endblock %}
+
+{% block content %}
+<h2>Your Personalized Learning Path</h2>
+<p>Based on your performance, we recommend: <strong>{{ recommendation.content }}</strong></p>
+<p>Current Level: <strong>{{ recommendation.level }}</strong></p>
+
+<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+{% endblock %}

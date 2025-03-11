@@ -1,0 +1,42 @@
+{% extends 'learning/base.html' %}
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+<style>
+    .leaderboard-entry {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease-in-out forwards;
+    }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<h2>Leaderboard</h2>
+<table>
+    <tr>
+        <th>Rank</th>
+        <th>Username</th>
+        <th>XP</th>
+    </tr>
+    {% for user in users %}
+    <tr class="leaderboard-entry" style="animation-delay: {{ forloop.counter|add:"0.1" }}s;">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ user.user.username }}</td>
+        <td>{{ user.xp }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+{% endblock %}
