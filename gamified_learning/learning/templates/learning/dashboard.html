@@ -1,0 +1,70 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2>Welcome, {{ user.username }}! 👋</h2>
+
+    <!-- XP & Level Information -->
+    <div class="profile-info">
+        <p>Your current XP: <strong>{{ user.profile.xp }}</strong></p>
+        <p>Your Level: <strong>{{ user.profile.level }}</strong></p>
+    </div>
+
+    <!-- Badges Earned -->
+    <div class="badges-section">
+        <h3>🏅 Badges Earned</h3>
+        <ul>
+            {% for badge in user.profile.badges.all %}
+                <li>
+                    <strong>{{ badge.name }}</strong>: {{ badge.description }}
+                </li>
+            {% empty %}
+                <p>No badges earned yet. Complete more tasks to earn them! 🚀</p>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Complete Task Button -->
+    <form action="{% url 'complete_task' %}" method="POST">
+        {% csrf_token %}
+        <button class="task-btn" type="submit">✅ Complete a Task (Earn XP)</button>
+    </form>
+
+    <!-- Learning Streak -->
+    <div class="streak-section">
+        <h3>🔥 Your Learning Streak</h3>
+        <p>Current Streak: <strong>{{ user.profile.streak }}</strong> days</p>
+        
+        {% if user.profile.streak > 0 %}
+            <p>Keep going! Earn extra XP for every 5-day streak! 🚀</p>
+        {% else %}
+            <p>Start your streak today by completing a task! 💪</p>
+        {% endif %}
+    </div>
+
+    <!-- Daily Challenge Button -->
+    <form action="{% url 'daily_challenge' %}" method="POST">
+        {% csrf_token %}
+        <button id="daily-challenge-btn" class="challenge-btn" type="submit">🏆 Complete Daily Challenge (Earn XP)</button>
+    </form>
+
+    <!-- XP Progress Bar -->
+    <div class="xp-progress">
+        <h3>📊 XP Progress</h3>
+        <div class="progress-container">
+            <div id="xp-bar" class="progress-bar" style="width: {{ user.profile.xp }}%;"></div>
+        </div>
+    </div>
+
+    <!-- Logout Link -->
+    <div class="logout-section">
+        <a class="logout-btn" href="{% url 'logout' %}">🚪 Logout</a>
+    </div>
+</div>
+<link rel="stylesheet" href="{% static 'learning/css/dashboard.css' %}">
+<script src="{% static 'learning/js/dashboard.js' %}" defer></script>
+
+{% endblock %}
