@@ -8,7 +8,10 @@ from django.utils.timezone import now
 import random
 from django.db.models import Avg
 from .models import LearningActivity, Recommendation
+import google.generativeai as genai
+from .models import QuizAttempt
 
+genai.configure(api_key="AIzaSyC6y4wisGIhFzvoXA4OYowPsQQeRYwqKcA")
 # Create your views here.
 def home(request):
     return render(request, 'learning/home.html')
@@ -93,7 +96,7 @@ def complete_task(request):
 
 @login_required
 def leaderboard(request):
-    users = Profile.objects.order_by('-xp')[:10]  # Top 10 users
+    users = Profile.objects.filter(user__is_superuser=False).order_by('-xp')[:10]  # Top 10 users
     return render(request, 'learning/leaderboard.html', {'users': users})
 
 @login_required
@@ -157,4 +160,80 @@ def personalized_quiz(request):
         quiz_difficulty = "Hard"
 
     return render(request, 'learning/quiz.html', {'difficulty': quiz_difficulty})
+
+@login_required
+def generate_quiz(request, topic):
+    """Generates a quiz using Gemini AI."""
+    
+    # Check if the user already took a quiz today
+    profile = request.user.profile
+    if profile.last_quiz_taken == now().date():
+        messages.error(request, "You have already taken a quiz today!")
+        return redirect('dashboard')
+    
+    avg_score = QuizAttempt.objects.filter(user=request.user).aggregate(Avg('score'))['score__avg'] or 0
+    difficulty = "Easy" if avg_score < 50 else "Medium" if avg_score < 80 else "Hard"
+
+    prompt = f"""
+    Generate a {difficulty} difficulty multiple-choice quiz on {topic}. 
+    Include 5 questions, each with 4 answer choices and a correct answer in JSON format:
+    Example:
+    {{
+        "questions": [
+            {{"text": "What is Python?", "choices": ["Language", "Snake", "Tool", "None"], "correct_answer": "Language"}},
+            ...
+        ]
+    }}
+    """
+
+    response = genai.generate_text(prompt)
+    quiz_data = response.text  # Extract AI-generated quiz data
+
+    return render(request, 'learning/quiz.html', {'quiz': quiz_data, 'topic': topic,'difficulty': difficulty})
+
+@login_required
+def submit_quiz(request):
+    """Validates quiz answers and awards XP only if answered correctly."""
+    
+    if request.method == "POST":
+        profile = request.user.profile
+        correct_answers = int(request.POST.get("correct_answers", 0))
+        total_questions = int(request.POST.get("total_questions", 5))
+        difficulty = request.POST.get("difficulty", "Easy")
+        topic = request.POST.get("topic", "General")
+
+        xp_rewards = {"Easy": 10, "Medium": 30, "Hard": 50}
+        
+        QuizAttempt.objects.create(
+            user=request.user,
+            topic=topic,
+            score=correct_answers,
+            total_questions=total_questions,
+            difficulty=difficulty,
+        )
+
+        # Ensure at least 80% accuracy for XP reward
+        if correct_answers >= (0.8 * total_questions):
+            if profile.last_quiz_taken != now().date():  # Prevent multiple XP gains per day
+                profile.add_xp(xp_rewards[difficulty])
+                profile.last_quiz_taken = now().date()
+                profile.save()
+                messages.success(request, f"You earned {xp_rewards[difficulty]} XP!")
+            else:
+                messages.error(request, "XP already awarded for today!")
+        else:
+            messages.warning(request, "You need 80% accuracy to earn XP.")
+
+        return redirect('dashboard')
+
+    return redirect('quiz')
+
+@login_required
+def quiz_history(request):
+    quizzes = QuizAttempt.objects.filter(user=request.user).order_by('-timestamp')
+    return render(request, 'learning/quiz_history.html', {'quizzes': quizzes})
+
+
+
+
 

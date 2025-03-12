@@ -1,0 +1,158 @@
+/* Import a Futuristic Font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(135deg, #090a0f, #1a1b22);
+    color: #00ffff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Dashboard Container - Glassmorphism Effect */
+.dashboard-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 30px;
+    background: rgba(25, 25, 25, 0.9);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 0px 20px rgba(0, 255, 255, 0.3);
+    border: 2px solid rgba(0, 255, 255, 0.5);
+    transition: 0.3s;
+}
+
+.dashboard-container:hover {
+    box-shadow: 0px 0px 30px rgba(0, 255, 255, 0.7);
+}
+
+/* XP & Level Section */
+.profile-info {
+    background: rgba(0, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.5);
+}
+
+/* XP Progress Bar */
+.xp-progress {
+    margin-top: 20px;
+    text-align: left;
+    position: relative;
+}
+
+.progress-container {
+    width: 100%;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.8);
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff00ff, #ffcc00);
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    font-weight: bold;
+    transition: width 1s ease-in-out;
+    box-shadow: 0px 0px 20px rgba(255, 0, 255, 0.8);
+    animation: pulseGlow 2s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0px 0px 20px rgba(255, 0, 255, 0.8); }
+    100% { box-shadow: 0px 0px 30px rgba(255, 0, 255, 1); }
+}
+
+/* Buttons - Futuristic Neon Style */
+.buttons-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.task-btn, .challenge-btn, .leaderboard-btn {
+    padding: 14px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #00ffff, #0066ff);
+    color: #0a0a0a;
+    text-align: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out;
+    font-weight: bold;
+    box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.5);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.task-btn::before, .challenge-btn::before, .leaderboard-btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 10%, rgba(255, 255, 255, 0) 50%);
+    transition: all 0.5s ease-in-out;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.task-btn:hover::before, .challenge-btn:hover::before, .leaderboard-btn:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.task-btn:hover, .challenge-btn:hover, .leaderboard-btn:hover {
+    box-shadow: 0px 0px 25px rgba(0, 255, 255, 0.9);
+}
+
+/* Leaderboard Button Special Color */
+.leaderboard-btn {
+    background: linear-gradient(90deg, #ffeb00, #ff7300);
+}
+
+.leaderboard-btn:hover {
+    box-shadow: 0px 0px 25px rgba(255, 235, 0, 0.9);
+}
+
+/* Streak Section */
+.streak-section {
+    background: rgba(255, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.8);
+}
+
+/* Logout Button */
+.logout-section {
+    margin-top: 30px;
+}
+
+.logout-btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #ff0000, #ff7300);
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.8);
+}
+
+.logout-btn:hover {
+    background: #ff0000;
+    box-shadow: 0px 0px 25px rgba(255, 0, 0, 0.9);
+}

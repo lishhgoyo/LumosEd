@@ -12,6 +12,7 @@ urlpatterns = [
     path('rewards/', views.rewards, name='rewards'),
     path('daily-challenge/', views.daily_challenge, name='daily_challenge'),
     path('recommendations/', views.personalized_recommendations, name='personalized_recommendations'),
-    path('quiz/', views.personalized_quiz, name='personalized_quiz'),
-    
+    path('quiz/<str:topic>/', views.generate_quiz, name='quiz'),
+    path('quiz/submit/', views.submit_quiz, name='submit_quiz'),
+    path('quiz/history/', views.quiz_history, name='quiz_history'),
 ]
