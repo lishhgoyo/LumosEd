@@ -2,17 +2,129 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h2>Login</h2>
-<form method="POST">
-    {% csrf_token %}
-    <label>Username:</label>
-    <input type="text" name="username" required>
-    
-    <label>Password:</label>
-    <input type="password" name="password" required>
-    
-    <button type="submit">Login</button>
-</form>
+<div class="login-container">
+    <h2>Login</h2>
+    <div class="form-box">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
 
-<p>Don't have an account? <a href="{% url 'signup' %}">Signup here</a></p>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+
+    <p class="signup-link">Don't have an account? <a href="{% url 'signup' %}">Signup here</a></p>
+</div>
+
+<style>
+    /* ---- 🎮 LOGIN CONTAINER ---- */
+    .login-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px;
+    }
+
+    /* ---- 🎮 LOGIN HEADER ---- */
+    .login-container h2 {
+        font-family: 'Press Start 2P', cursive;
+        font-size: 2rem;
+        color: #ffcc00;
+        text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+        margin-bottom: 20px;
+        background: none;
+        padding: 0;
+        border: none;
+        display: inline-block;
+        position: relative;
+        left: 40px; /* Moves the text slightly to the right */
+    }
+
+    /* ---- 🎮 FORM BOX ---- */
+    .form-box {
+        background: rgba(25, 28, 50, 0.9);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        width: 100%;
+        max-width: 400px;
+        border: 2px solid #ffcc00;
+    }
+
+    /* ---- 🎮 FORM GROUPS ---- */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 1rem;
+        margin-bottom: 8px;
+        color: #ffcc00;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ffcc00;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-group input:focus {
+        border-color: #ff6f00;
+        box-shadow: 0 0 10px rgba(255, 111, 0, 0.7);
+        outline: none;
+    }
+
+    /* ---- 🎮 LOGIN BUTTON ---- */
+    .login-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg, #ff6f00, #ffcc00);
+        color: #0a0a0a;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .login-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
+    }
+
+    /* ---- 🎮 SIGNUP LINK ---- */
+    .signup-link {
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: #ffffff;
+    }
+
+    .signup-link a {
+        color: #ffcc00;
+        text-decoration: none;
+        transition: text-shadow 0.3s;
+    }
+
+    .signup-link a:hover {
+        text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+    }
+</style>
 {% endblock %}

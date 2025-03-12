@@ -12,9 +12,6 @@ class Profile(models.Model):
     last_active = models.DateField(null=True, blank=True)
     streak = models.IntegerField(default=0)
 
-    def __str__(self):
-        return f"{self.user.username}'s Profile"
-
     def add_xp(self, points):
         self.xp += points
         self.level = self.xp // 100 + 1  # Level up for every 100 XP
@@ -58,6 +55,18 @@ class Recommendation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     level = models.CharField(max_length=50, choices=[('Beginner', 'Beginner'), ('Intermediate', 'Intermediate'), ('Advanced', 'Advanced')])
+    
+class QuizAttempt(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    topic = models.CharField(max_length=100)
+    score = models.IntegerField()
+    total_questions = models.IntegerField()
+    difficulty = models.CharField(max_length=20, choices=[('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard')])
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.topic} ({self.score}/{self.total_questions})"
+
 
 
 

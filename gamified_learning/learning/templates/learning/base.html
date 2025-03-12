@@ -1,33 +1,261 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Gamified Learning{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Gamified Learning Platform</h1>
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
+    <div class="page-container">
+        <!-- 🎮 NAVBAR START -->
+        <header class="navbar">
+            <!-- Logo / Brand -->
+            <div class="brand">LumosEd</div>
+
+            <!-- Navigation Links -->
+            <nav class="nav-links">
+                <a href="{% url 'home' %}">Home</a>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                {% else %}
-                    <li><a href="{% url 'login' %}">Login</a></li>
-                    <li><a href="{% url 'signup' %}">Signup</a></li>
+                <a href="{% url 'dashboard' %}">Dashboard</a>
                 {% endif %}
-            </ul>
-        </nav>
-    </header>    
+            </nav>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+            <!-- User Options -->
+            <div class="user-options">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a> |
+                    <a href="{% url 'signup' %}">Signup</a>
+                {% endif %}
+            </div>
+        </header>
+        <!-- 🎮 NAVBAR END -->
 
-    <script src="{% static 'js/script.js' %}"></script>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer>
+            <p>© 2025 Gamified Learning Platform. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Gamified Learning Platform Loaded!");
+            let xpBar = document.getElementById("xp-bar");
+            if (xpBar) {
+                let xpValue = parseInt(xpBar.style.width);
+                setTimeout(() => {
+                    xpBar.style.width = xpValue + "%";
+                }, 300);
+            }
+        
+            let challengeBtn = document.getElementById("daily-challenge-btn");
+            if (challengeBtn) {
+                challengeBtn.addEventListener("click", function () {
+                    challengeBtn.innerText = "✅ Completed!";
+                    challengeBtn.disabled = true;
+                });
+            }
+        });
+    </script>
+
+    <style>
+        /* ---- 🎮 GAMING THEME ---- */
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(circle, #1a1a2e, #16213e, #0f3460);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            cursor: url('/static/images/cursor.png'), auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+        }
+
+        /* ---- 🎮 PAGE CONTAINER ---- */
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1; /* Allows the container to grow and push the footer down */
+        }
+
+        /* ---- 🎮 HEADER ---- */
+        header {
+            background: linear-gradient(135deg, #0c0f1a, #1b1e2f);
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.5rem;
+            color: #ffcc00;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+            margin: 0;
+        }
+
+        /* ---- 🎮 NAVIGATION LINKS ---- */
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0; /* Added top margin */
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #ffcc00;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+        }
+
+        /* ---- 🎮 MAIN CONTENT ---- */
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1; /* Allows main content to grow and push the footer down */
+        }
+
+        /* ---- 🎮 BUTTONS ---- */
+        button {
+            background: linear-gradient(90deg, #ff6f00, #ffcc00);
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
+        }
+
+        /* ---- 🎮 FOOTER ---- */
+        footer {
+            background: linear-gradient(135deg, #0c0f1a, #1b1e2f);
+            padding: 10px 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            margin-top: auto; /* Pushes the footer to the bottom */
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        /* ---- 🎮 TABLES ---- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(25, 28, 50, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        th, td {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: linear-gradient(135deg, #ff6f00, #ffcc00);
+            color: #0a0a0a;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ---- 🎮 NAVIGATION BAR ---- */
+.navbar {
+    background: linear-gradient(135deg, #0c0f1a, #1b1e2f);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* 🎮 Logo / Brand */
+.navbar .brand {
+    font-size: 1.4rem;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow: 4px 4px 0px #ffcc00, 6px 6px 0px rgba(0, 0, 0, 0.5);
+}
+
+/* 🎮 Navigation Links */
+.navbar .nav-links {
+    display: flex;
+    flex:1;
+    justify-content:flex-start;
+    gap: 30px;
+    margin-left:50px;
+}
+
+.navbar .nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease-in-out, text-shadow 0.3s;
+    text-align:left;
+}
+
+.navbar .nav-links a:hover {
+    color: #ffcc00;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+}
+
+/* 🎮 User Options (Login/Signup) */
+.navbar .user-options {
+    display: flex;
+    gap: 15px;
+}
+
+.navbar .user-options a {
+    color: #ffcc00;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: text-shadow 0.3s ease-in-out;
+}
+
+.navbar .user-options a:hover {
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+}
+
+    </style>
 </body>
 </html>

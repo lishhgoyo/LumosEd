@@ -5,66 +5,216 @@
 
 {% block content %}
 <div class="dashboard-container">
-    <h2>Welcome, {{ user.username }}! 👋</h2>
+    <h2 class="dashboard-title">Welcome, {{ user.username }}! 👋</h2>
 
-    <!-- XP & Level Information -->
-    <div class="profile-info">
-        <p>Your current XP: <strong>{{ user.profile.xp }}</strong></p>
-        <p>Your Level: <strong>{{ user.profile.level }}</strong></p>
-    </div>
+    <div class="dashboard-grid">
+        <!-- XP & Level Info -->
+        <div class="card profile-card">
+            <h3>🎮 Player Stats</h3>
+            <p>Your XP: <strong>{{ user.profile.xp }}</strong></p>
+            <p>Level: <strong>{{ user.profile.level }}</strong></p>
+        </div>
 
-    <!-- Badges Earned -->
-    <div class="badges-section">
-        <h3>🏅 Badges Earned</h3>
-        <ul>
-            {% for badge in user.profile.badges.all %}
-                <li>
-                    <strong>{{ badge.name }}</strong>: {{ badge.description }}
-                </li>
-            {% empty %}
-                <p>No badges earned yet. Complete more tasks to earn them! 🚀</p>
-            {% endfor %}
-        </ul>
-    </div>
+        <!-- Badges Earned -->
+        <div class="card badge-card">
+            <h3>🏅 Badges Earned</h3>
+            <ul>
+                {% for badge in user.profile.badges.all %}
+                    <li><strong>{{ badge.name }}</strong>: {{ badge.description }}</li>
+                {% empty %}
+                    <p>No badges yet. Keep completing tasks to earn them! 🚀</p>
+                {% endfor %}
+            </ul>
+        </div>
 
-    <!-- Complete Task Button -->
-    <form action="{% url 'complete_task' %}" method="POST">
-        {% csrf_token %}
-        <button class="task-btn" type="submit">✅ Complete a Task (Earn XP)</button>
-    </form>
+        <!-- Tasks & Challenges -->
+        <div class="card task-card">
+            <h3>📌 Missions & Challenges</h3>
+            <form action="{% url 'complete_task' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn task-btn">✅ Complete a Task (Earn XP)</button>
+            </form>
 
-    <!-- Learning Streak -->
-    <div class="streak-section">
-        <h3>🔥 Your Learning Streak</h3>
-        <p>Current Streak: <strong>{{ user.profile.streak }}</strong> days</p>
-        
-        {% if user.profile.streak > 0 %}
-            <p>Keep going! Earn extra XP for every 5-day streak! 🚀</p>
-        {% else %}
-            <p>Start your streak today by completing a task! 💪</p>
-        {% endif %}
-    </div>
+            <form action="{% url 'daily_challenge' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn challenge-btn">🏆 Daily Challenge (Earn XP)</button>
+            </form>
+        </div>
 
-    <!-- Daily Challenge Button -->
-    <form action="{% url 'daily_challenge' %}" method="POST">
-        {% csrf_token %}
-        <button id="daily-challenge-btn" class="challenge-btn" type="submit">🏆 Complete Daily Challenge (Earn XP)</button>
-    </form>
+        <!-- XP Progress Bar -->
+        <div class="card xp-card">
+            <h3>📊 XP Progress</h3>
+            <div class="progress-container">
+                <div id="xp-bar" class="progress-bar" style="width: {{ user.profile.xp }}%;"></div>
+            </div>
+        </div>
 
-    <!-- XP Progress Bar -->
-    <div class="xp-progress">
-        <h3>📊 XP Progress</h3>
-        <div class="progress-container">
-            <div id="xp-bar" class="progress-bar" style="width: {{ user.profile.xp }}%;"></div>
+        <!-- Leaderboard -->
+        <div class="card leaderboard-card">
+            <h3>🏆 Leaderboard</h3>
+            <p>See where you stand among top players!</p>
+            <a href="{% url 'leaderboard' %}" class="btn leaderboard-btn">🔝 View Quiz Leaderboard</a>
+        </div>
+
+        <!-- Streak Information -->
+        <div class="card streak-card">
+            <h3>🔥 Streak Status</h3>
+            <p>Current Streak: <strong>{{ user.profile.streak }}</strong> days</p>
+            {% if user.profile.streak > 0 %}
+                <p>Keep going! Earn extra XP for every 5-day streak! 🚀</p>
+            {% else %}
+                <p>Start today by completing a task! 💪</p>
+            {% endif %}
         </div>
     </div>
 
-    <!-- Logout Link -->
+    <!-- Logout Button -->
     <div class="logout-section">
-        <a class="logout-btn" href="{% url 'logout' %}">🚪 Logout</a>
+        <a class="btn logout-btn" href="{% url 'logout' %}">🚪 Logout</a>
     </div>
 </div>
-<link rel="stylesheet" href="{% static 'learning/css/dashboard.css' %}">
-<script src="{% static 'learning/js/dashboard.js' %}" defer></script>
 
+<style>
+    /* ---- 🎮 GAMING BACKGROUND ---- */
+    body {
+        background: radial-gradient(circle, #1a1a2e, #16213e, #0f3460); /* Dark blue gradient */
+        color: #ffffff;
+        font-family: 'Orbitron', sans-serif;
+        text-align: center;
+        padding: 30px;
+    }
+
+    /* ---- 🎮 DASHBOARD CONTAINER ---- */
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .dashboard-title {
+        font-size: 2.5rem;
+        margin-bottom: 30px;
+        color: #ffcc00; /* Gold color */
+        text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+    }
+
+    /* ---- 🎮 GRID LAYOUT FOR BOXES ---- */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        justify-content: center;
+    }
+
+    /* ---- 🎮 BOX STYLES ---- */
+    .card {
+        background: rgba(25, 28, 50, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: 2px solid transparent;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+        border-color: #ffcc00;
+    }
+
+    /* 🟡 COLOR VARIANTS FOR DIFFERENT SECTIONS */
+    .profile-card { border-color: #ffcc00; }  /* Gold */
+    .task-card { border-color: #17ff92; }  /* Neon Green */
+    .leaderboard-card { border-color: #ff3366; }  /* Bright Pink */
+    .badge-card { border-color: #3388ff; }  /* Electric Blue */
+    .streak-card { border-color: #ff44aa; }  /* Deep Pink */
+    .xp-card { border-color: #ff8500; }  /* Orange */
+
+    /* ---- 🎮 BUTTON STYLES ---- */
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 15px;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+        background: linear-gradient(90deg, #ff6f00, #ffcc00);
+        box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
+    }
+
+    /* ---- 🚀 XP PROGRESS BAR ---- */
+    .progress-container {
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+        height: 15px;
+        margin-top: 10px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #ff6f00, #ffcc00);
+        width: 0%;
+        transition: width 1s ease-in-out;
+    }
+
+    /* ---- 🚪 LOGOUT BUTTON ---- */
+    .logout-btn {
+        display: block;
+        width: fit-content;
+        margin: 30px auto 0;
+        background: linear-gradient(90deg, #ff3366, #8b0000);
+        box-shadow: 0 0 10px rgba(255, 51, 102, 0.8);
+    }
+
+    .logout-btn:hover {
+        box-shadow: 0 0 18px rgba(255, 51, 102, 1);
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let xpBar = document.querySelector(".progress-bar");
+        let xpValue = xpBar.getAttribute("data-xp");
+
+        // Animate XP Bar Fill
+        setTimeout(() => {
+            xpBar.style.width = xpValue + "%";
+        }, 300);
+
+        // Daily Challenge Button Effect
+        let challengeBtn = document.getElementById("daily-challenge-btn");
+        if (challengeBtn) {
+            challengeBtn.addEventListener("click", function () {
+                challengeBtn.innerText = "✅ Completed!";
+                challengeBtn.style.background = "linear-gradient(90deg, #ff7300, #ffeb00)";
+                challengeBtn.style.color = "#0a0a0a";
+                challengeBtn.disabled = true;
+            });
+        }
+
+        // Hover Glowing Effect
+        let buttons = document.querySelectorAll(".task-btn, .challenge-btn, .leaderboard-btn");
+        buttons.forEach(button => {
+            button.addEventListener("mouseenter", function () {
+                button.style.boxShadow = "0px 0px 25px rgba(0, 255, 255, 0.9)";
+            });
+            button.addEventListener("mouseleave", function () {
+                button.style.boxShadow = "0px 0px 15px rgba(0, 255, 255, 0.5)";
+            });
+        });
+    });
+</script>
 {% endblock %}

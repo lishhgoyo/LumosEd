@@ -1,14 +1,37 @@
 {% extends 'learning/base.html' %}
-{% block title %}Personalized Quiz{% endblock %}
+{% block title %}Quiz - {{ topic }}{% endblock %}
 
 {% block content %}
-<h2>Today's Quiz - Level: {{ difficulty }}</h2>
-<p>Answer these questions to improve your learning experience!</p>
+<h2>{{ topic }} Quiz - {{ difficulty }} Level</h2>
+<p>Answer these questions to earn XP!</p>
 
-<form action="{% url 'dashboard' %}" method="POST">
+<form method="post" action="{% url 'submit_quiz' %}">
     {% csrf_token %}
+    {% for question in quiz.questions %}
+        <p><strong>{{ question.text }}</strong></p>
+        {% for choice in question.choices %}
+            <input type="radio" name="q{{ forloop.parentloop.counter }}" value="{{ choice }}"> {{ choice }}<br>
+        {% endfor %}
+    {% endfor %}
+    <input type="hidden" name="correct_answers" id="correct_answers">
+    <input type="hidden" name="total_questions" value="{{ quiz.questions|length }}">
+    <input type="hidden" name="difficulty" value="{{ difficulty }}">
+    <input type="hidden" name="topic" value="{{ topic }}">
     <button type="submit">Submit Quiz</button>
 </form>
 
-<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+<a href="{% url 'quiz_history' %}">View Quiz History</a>
+
+<script>
+    document.querySelector("form").addEventListener("submit", function(event) {
+        let correctCount = 0;
+        {% for question in quiz.questions %}
+            let selected = document.querySelector("input[name='q{{ forloop.counter }}']:checked");
+            if (selected && selected.value === "{{ question.correct_answer }}") {
+                correctCount++;
+            }
+        {% endfor %}
+        document.getElementById("correct_answers").value = correctCount;
+    });
+</script>
 {% endblock %}
